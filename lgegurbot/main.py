@@ -43,6 +43,16 @@ def parse_args():
     
     return parser.parse_args()
 
+def start_command(update: Update, context: CallbackContext):
+    """
+    Reaction on /start command
+    """
+    user = update.message.from_user
+    response = 'Received command: ' + update.message.text
+    # bot.send_message(chat_id=update.message.chat_id, text='Привет, давай пообщаемся?')
+    update.message.reply_text(response)
+    log.info("Started conversation with %s", user.username)
+
 def text_message(update: Update, context: CallbackContext):
     """
     This function reads text and replies on it
@@ -70,6 +80,8 @@ def main():
     updater = Updater(token=args.token) 
     dispatcher = updater.dispatcher
     text_message_handler = MessageHandler(Filters.all, text_message)
+    start_command_hendler = CommandHandler('start', start_command)
+    dispatcher.add_handler(start_command_hendler)
     dispatcher.add_handler(text_message_handler)
     dispatcher.add_error_handler(error)
 
